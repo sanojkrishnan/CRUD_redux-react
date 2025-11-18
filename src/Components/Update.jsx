@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { updateUser } from "../features/UserDetailSlice";
 
 function Update() {
   const [data, setData] = useState();
 
   const { id } = useParams();
 
+  const dispatch = useDispatch();
+
   const {users , loading} = useSelector((state) => state.app);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (id) {
@@ -16,10 +21,20 @@ function Update() {
     }
   }, []);
 
+  const newData = (e) => {
+    setData({...data, [e.target.name] : e.target.value})
+  };
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    dispatch(updateUser(data))
+    navigate("/read");
+  };
+
   return (
     <div className="w-25 border rounded-3 bg-light ms-auto me-auto p-3 mt-5 ">
       <h3>Edit The Data</h3>
-      <form>
+      <form onSubmit={handleUpdate}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name
@@ -28,9 +43,9 @@ function Update() {
             type="text"
             className="form-control"
             name="name"
-            value={data.name}
+            value={data && data.name}
             id="name"
-            //onChange={getUserData}
+            onChange={newData}
           />
         </div>
         <div className="mb-3">
@@ -40,10 +55,10 @@ function Update() {
           <input
             type="email"
             className="form-control"
-            value={data.email}
+            value={data && data.email}
             name="email"
             id="email"
-            //onChange={getUserData}
+            onChange={newData}
           />
         </div>
         <div className="mb-3">
@@ -53,10 +68,10 @@ function Update() {
           <input
             type="number"
             className="form-control"
-            value={data.age}
+            value={data && data.age}
             name="age"
             id="age"
-            //onChange={getUserData}
+            onChange={newData}
           />
         </div>
         <div className="mb-3">
@@ -65,8 +80,8 @@ function Update() {
             type="radio"
             name="gender"
             value="male"
-            checked={data.gender === "male"}
-            //onChange={getUserData}
+            checked={data && data.gender === "male"}
+            onChange={newData}
           />
           <label className="form-check-label">&nbsp;&nbsp;&nbsp;Male</label>
         </div>
@@ -76,12 +91,12 @@ function Update() {
             type="radio"
             name="gender"
             value="female"
-            checked={data.gender === "female"}
-            //onChange={getUserData}
+            checked={data && data.gender === "female"}
+            onChange={newData}
           />
           <label className="form-check-label">&nbsp;&nbsp;&nbsp;Female</label>
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="">
           Submit
         </button>
       </form>
