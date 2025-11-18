@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { showUser } from "../features/UserDetailSlice";
+import { deleteUser, showUser } from "../features/UserDetailSlice";
 import CustomModel from "./CustomModel";
+import { Link } from "react-router-dom";
 
 function Read() {
   const [id, setId] = useState();
@@ -24,12 +25,12 @@ function Read() {
 
   return (
     <>
-      {popUp && <CustomModel id={id} popUp={popUp} setPopUp={setPopUp}/>}
+      {popUp && <CustomModel id={id} popUp={popUp} setPopUp={setPopUp} />}
       <h4 className="mt-2 ms-4"> All Data</h4>
-      {users &&
-        users.map((element) => (
-          <div>
-            <div className="card mt-5 ms-4" style={{ width: "300px" }}>
+      <div className="row">
+        {users &&
+          users.map((element) => (
+            <div className=" card mt-5 ms-4" style={{ width: "300px" }}>
               <div className="card-body" key={element.id}>
                 <h5 className="card-title">{element.name}</h5>
                 <h6 className="card-subtitle mb-2 text-body-secondary">
@@ -45,16 +46,16 @@ function Read() {
                 >
                   View
                 </button>
-                <a href="#" className="card-link">
+                <Link to={`/edit/${element.id}`} className="card-link">
                   Edit
-                </a>
-                <a href="#" className="card-link">
+                </Link>
+                <Link onClick={() => dispatch(deleteUser(element.id))} className="card-link">
                   Delete
-                </a>
+                </Link>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+      </div>
     </>
   );
 }

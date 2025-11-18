@@ -49,6 +49,27 @@ export const showUser = createAsyncThunk(
   }
 );
 
+//delete action
+export const deleteUser = createAsyncThunk(
+  "deleteUser",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `https://6919ca519ccba073ee93ecd1.mockapi.io/crud/${id}`,
+        { method: "DELETE" }
+      );
+
+      if (!response.ok) {
+        return rejectWithValue("Failed to show users");
+      }
+
+      const result = await response.json();
+      return result; // this is an array
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 //--------------------------------------------------------------
 export const userDetail = createSlice({
@@ -72,18 +93,34 @@ export const userDetail = createSlice({
         state.error = action.payload;
       })
 
-
       .addCase(showUser.pending, (state) => {
         state.loading = true;
       })
       .addCase(showUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.users =action.payload;
+        state.users = action.payload;
       })
       .addCase(showUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
+
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.loading = false;
+
+        const { id } = action.payload;
+
+        if (id) {
+          state.users = state.users.filter((item) => item.id !== id);
+        }
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 

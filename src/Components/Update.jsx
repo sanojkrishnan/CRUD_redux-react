@@ -1,30 +1,25 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createUser } from "../features/UserDetailSlice";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
-function Create() {
-  const [users, setUsers] = useState({});
+function Update() {
+  const [data, setData] = useState();
 
-  const navigate =useNavigate();
+  const { id } = useParams();
 
-  const dispatch = useDispatch(); //useDispatch is a React Redux hook that provides a reference to the Redux store's dispatch function, allowing functional components to send actions to the store to update the state
+  const {users , loading} = useSelector((state) => state.app);
 
-  const getUserData = (e) => {
-    setUsers({ ...users, [e.target.name]: e.target.value });
-    console.log(users);
-  };
+  useEffect(() => {
+    if (id) {
+      const [singleUser] = users.filter((item) => item.id === id);
+      setData(singleUser);
+    }
+  }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("users...", users);
-    dispatch(createUser(users));
-    navigate("/read");
-  };
   return (
-    <div className="w-25 border rounded-3 bg-light float-end me-5 p-3 mt-5 ">
-      <h3>Fill The Data</h3>
-      <form onSubmit={handleSubmit}>
+    <div className="w-25 border rounded-3 bg-light ms-auto me-auto p-3 mt-5 ">
+      <h3>Edit The Data</h3>
+      <form>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
             Name
@@ -33,8 +28,9 @@ function Create() {
             type="text"
             className="form-control"
             name="name"
+            value={data.name}
             id="name"
-            onChange={getUserData}
+            //onChange={getUserData}
           />
         </div>
         <div className="mb-3">
@@ -44,9 +40,10 @@ function Create() {
           <input
             type="email"
             className="form-control"
+            value={data.email}
             name="email"
             id="email"
-            onChange={getUserData}
+            //onChange={getUserData}
           />
         </div>
         <div className="mb-3">
@@ -56,9 +53,10 @@ function Create() {
           <input
             type="number"
             className="form-control"
+            value={data.age}
             name="age"
             id="age"
-            onChange={getUserData}
+            //onChange={getUserData}
           />
         </div>
         <div className="mb-3">
@@ -67,7 +65,8 @@ function Create() {
             type="radio"
             name="gender"
             value="male"
-            onChange={getUserData}
+            checked={data.gender === "male"}
+            //onChange={getUserData}
           />
           <label className="form-check-label">&nbsp;&nbsp;&nbsp;Male</label>
         </div>
@@ -77,11 +76,12 @@ function Create() {
             type="radio"
             name="gender"
             value="female"
-            onChange={getUserData}
+            checked={data.gender === "female"}
+            //onChange={getUserData}
           />
           <label className="form-check-label">&nbsp;&nbsp;&nbsp;Female</label>
         </div>
-        <button type="submit" className="">
+        <button type="submit" className="btn btn-primary">
           Submit
         </button>
       </form>
@@ -89,4 +89,4 @@ function Create() {
   );
 }
 
-export default Create;
+export default Update;
