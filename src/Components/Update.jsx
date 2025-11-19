@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { updateUser } from "../features/UserDetailSlice";
 
 function Update() {
@@ -10,7 +10,7 @@ function Update() {
 
   const dispatch = useDispatch();
 
-  const {users , loading} = useSelector((state) => state.app);
+  const {users} = useSelector((state) => state.app);
 
   const navigate = useNavigate()
 
@@ -99,6 +99,7 @@ function Update() {
         <button type="submit" className="">
           Submit
         </button>
+        <Link to={"/read"} className="mx-5" >Back</Link>
       </form>
     </div>
   );
