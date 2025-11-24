@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, showUser } from "../features/UserDetailSlice";
 import CustomModel from "./CustomModel";
 import { Link } from "react-router-dom";
+import Loading from "../loadingPage/Loading";
 
 function Read() {
   const [id, setId] = useState();
@@ -22,7 +23,7 @@ function Read() {
   }, []);
 
   if (loading) {
-    return <h2>Loading...</h2>;
+    return <Loading/>;
   }
 
   return (
