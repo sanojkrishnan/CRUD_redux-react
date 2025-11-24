@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
  
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}>  //provider is used to provide the store to the entire application. This will help to access state from anywhere
+    <Provider store={store}>  {/*provider is used to provide the store to the entire application. This will help to access state from anywhere*/}
       <App />
     </Provider>
   </StrictMode>
