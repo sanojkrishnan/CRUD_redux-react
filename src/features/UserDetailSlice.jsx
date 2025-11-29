@@ -2,17 +2,17 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 // create action
 export const createUser = createAsyncThunk(
-  "createUser",
-  async (data, { rejectWithValue }) => {
+  "createUser", //action name
+  async (data, { rejectWithValue }) => { //rejectWithValue is used to return the error message if the request fails 
     try {
       const response = await fetch(
         "https://6919ca519ccba073ee93ecd1.mockapi.io/crud",
         {
           method: "POST",
-          headers: {
+          headers: {  //headers is used to specify the type of data we are sending
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data),
+          body: JSON.stringify(data), //data is converted to json format 
         }
       );
 
@@ -99,8 +99,8 @@ export const updateUser = createAsyncThunk(
   }
 );
 //--------------------------------------------------------------
-export const userDetail = createSlice({
-  name: "userDetail",
+export const userDetail = createSlice({  //create slice combines creation of actions and reducers into a single function
+  name: "userDetail",  // it takes am object with a slice name, an initial state, adn an object of reducers. it will automatically generate action creator and an action type for you
   initialState: {
     users: [],
     loading: false,
