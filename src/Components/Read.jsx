@@ -4,13 +4,14 @@ import { deleteUser, showUser } from "../features/UserDetailSlice";
 import CustomModel from "./CustomModel";
 import { Link } from "react-router-dom";
 import Loading from "../loadingPage/Loading";
+import { Formik, Form, Field } from "formik";
 
 function Read() {
   const [id, setId] = useState();
 
   const [popUp, setPopUp] = useState(false);
 
-  const [radio , setRadio] = useState("");
+  const [genderFilter, setGenderFilter] = useState("all");
 
   const dispatch = useDispatch();
 
@@ -20,11 +21,19 @@ function Read() {
 
   useEffect(() => {
     dispatch(showUser()); // <-- CALL the action creator
-  }, []);
+  }, [dispatch]);
 
   if (loading) {
-    return <Loading/>;
+    return <Loading />;
   }
+
+  const initialValues = {
+    gender: "all"
+  };
+
+  const handleGenderChange = (e) => {
+    setGenderFilter(e.target.value);
+  };
 
   return (
     <>
@@ -33,41 +42,61 @@ function Read() {
       <div className="row">
         <div className="d-flex justify-content-end">
           <div className="pe-5 pt-3">
-            <div className="mb-3">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="gender"
-                value={"all"}
-                checked={radio === "" || radio == "all"}
-                onChange={(e) => setRadio(e.target.value)}
-              />
-              <label className="form-check-label">&nbsp;&nbsp;&nbsp;All</label>
-            </div>
-            <div className="mb-3">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="gender"
-                value="male"
-                checked={radio === "male"}
-                onChange={(e) => setRadio(e.target.value)}
-              />
-              <label className="form-check-label">&nbsp;&nbsp;&nbsp;Male</label>
-            </div>
-            <div className="mb-3">
-              <input
-                className="form-check-input"
-                type="radio"
-                name="gender"
-                value="female"
-                checked={radio === "female"}
-                onChange={(e) => setRadio(e.target.value)}
-              />
-              <label className="form-check-label">
-                &nbsp;&nbsp;&nbsp;Female
-              </label>
-            </div>
+            <Formik
+              initialValues={initialValues}
+              onSubmit={() => {}}
+              enableReinitialize
+            >
+              {({ setFieldValue }) => (
+                <Form>
+                  <div className="mb-3">
+                    <Field
+                      className="form-check-input"
+                      type="radio"
+                      name="gender"
+                      value="all"
+                      id="all"
+                      checked={genderFilter === "all"}
+                      onChange={(e) => {
+                        setFieldValue("gender", e.target.value);
+                        handleGenderChange(e);
+                      }}
+                    />
+                    <label className="form-check-label" htmlFor="all">&nbsp;&nbsp;&nbsp;All</label>
+                  </div>
+                  <div className="mb-3">
+                    <Field
+                      className="form-check-input"
+                      type="radio"
+                      name="gender"
+                      value="male"
+                      id="male"
+                      checked={genderFilter === "male"}
+                      onChange={(e) => {
+                        setFieldValue("gender", e.target.value);
+                        handleGenderChange(e);
+                      }}
+                    />
+                    <label className="form-check-label" htmlFor="male">&nbsp;&nbsp;&nbsp;Male</label>
+                  </div>
+                  <div className="mb-3">
+                    <Field
+                      className="form-check-input"
+                      type="radio"
+                      name="gender"
+                      value="female"
+                      id="female"
+                      checked={genderFilter === "female"}
+                      onChange={(e) => {
+                        setFieldValue("gender", e.target.value);
+                        handleGenderChange(e);
+                      }}
+                    />
+                    <label className="form-check-label" htmlFor="female">&nbsp;&nbsp;&nbsp;Female</label>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
         {users &&
@@ -82,19 +111,17 @@ function Read() {
               }
             })
             .filter((item) => {
-              if(radio === "male") {
-                return item.gender === radio;
-              }else if(radio === "female") {
-                return item.gender === radio;
-              }else if(radio === "all"){
-                return item ;
-              }else{
-                return item ;
+              if (genderFilter === "male") {
+                return item.gender === "male";
+              } else if (genderFilter === "female") {
+                return item.gender === "female";
+              } else {
+                return true;
               }
             })
             .map((element) => (
-              <div className=" card mt-5 ms-4" style={{ width: "300px" }}>
-                <div className="card-body" key={element.id}>
+              <div className=" card mt-5 ms-4" style={{ width: "300px" }} key={element.id}>
+                <div className="card-body">
                   <h5 className="card-title">{element.name}</h5>
                   <h6 className="card-subtitle mb-2 text-body-secondary">
                     {element.email}
